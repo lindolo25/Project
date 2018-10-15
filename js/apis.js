@@ -3,9 +3,7 @@ console.log("it all starts here.");
 var apis = 
 {
     resultsMax: 10,
-    currentMap: null,
     eventfulKey : "NpnNdQRSnct6h9mZ",
-    everbriteKey: "2ZICJIQQLA7K6R7F664Y",
 
     eventfulVenues: function(keyword, location, callback)
     {
@@ -23,15 +21,71 @@ var apis =
         }); 
     },
 
-    everbriteSearchEvents: function(keyword, location, callback)
+    eventbrite: 
     {
-        $.ajax({
-            url: "https://www.eventbriteapi.com/v3/events/search/?q="+ keyword
-            +"&location.address="+ location 
-            +"&sort_by=best"
-            +"&token=" + this.everbriteKey,
-            method: "GET"
-        }).then(callback);
+        everbriteKey: "2ZICJIQQLA7K6R7F664Y",
+
+        searchEvents: function(keyword, location, callback) 
+        {
+            $.ajax({
+                url: "https://www.eventbriteapi.com/v3/events/search/?q="+ keyword
+                +"&location.address="+ location
+                +"&sort_by=best"
+                +"&token=" + this.everbriteKey,
+                method: "GET"
+            })
+            .done(function(response) { apis.eventbrite.listeners.eventSearchListener(response, callback); })
+            .fail(function() { apis.eventbrite.listeners.eventSearchFailed(callback); });
+        },
+
+        listeners:
+        {
+            eventSearchListener: function(response, callback)
+            {
+                console.log("eventbrite response handler.");
+                if(response.events.length === 0)
+                {
+                    response = null;
+                    callback(response);
+                    return;
+                }
+
+                var result = [];
+
+                for(i = 0; i < response.events.length; i++)
+                {
+                    temp = response.events[i];
+
+                    var short = temp.description.text.substring(200,temp.description.text.length - 1);
+                    var pos = short.indexOf(" ");
+                    pos = 200 + pos;
+                    short = temp.description.text.substring(0, pos);
+                    result.push({
+                        id: temp.id,
+                        categoryId: temp.category_id,
+                        name: temp.name.text,
+                        desc: temp.description.text,
+                        shortDesc: short,
+                        dateCreated: temp.created,
+                        dateStart: temp.start.utc,
+                        dateEnd: temp.end.utc,
+                        url: temp.url,
+                        venueId: temp.venue_id,
+                        imageUrl: temp.logo.url,
+                        imageId: temp.logo.id
+                    });
+                }
+
+                callback(result);
+            },
+
+            eventSearchFailed: function(callback)
+            {
+                console.log("searching for events failed.");
+                var response = null;
+                callback(response);
+            }
+        }
     },
 
     maps: 
@@ -49,8 +103,7 @@ var apis =
             return { 
                 map: map, 
                 element: mapObject, 
-                markers: [],  
-                infoWindows: [],
+                markers: [],
 
                 bindAutocomplete: function(input) { apis.maps.bindAutocomplete(input, this); },
                 addMarker: function (lng, lat, title, desc) { apis.maps.addMarker(lng, lat, title, desc, this); },
@@ -69,10 +122,10 @@ var apis =
             });
         },
 
-        addMarker: function(lng, lat, title, desc, map) 
+        addMarker: function(lng, lat, title, desc, map)
         {
             var loc = new google.maps.LatLng(lat, lng);
-            var marker = new google.maps.Marker({ map: map.map, anchorPoint: new google.maps.Point(0, -29) });            
+            var marker = new google.maps.Marker({ map: map.map, anchorPoint: new google.maps.Point(0, -29) });
             marker.setVisible(false);
             marker.setPosition(loc);
             marker.setVisible(true);
@@ -123,11 +176,6 @@ var apis =
                     window.alert("No details available for input: '" + place.name + "'");
                     return;
                 }
-                
-                if (place.geometry.viewport) 
-                {
-                    map.map.fitBounds(place.geometry.viewport);
-                }
 
                 var address = '';
                 if (place.address_components)
@@ -141,6 +189,11 @@ var apis =
                 }
 
                 apis.maps.addMarker(place.geometry.location.lng(), place.geometry.location.lat(), place.name, address, map);
+                
+                if (place.geometry.viewport) 
+                {
+                    map.map.fitBounds(place.geometry.viewport);
+                }
             }
         }
     },
@@ -157,7 +210,7 @@ var apis =
 $(document).ready(function()
 {
     apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
-    apis.everbriteSearchEvents("bike riding", "Miami", function(response) { console.log(response) });
+    apis.eventbrite.searchEvents("bike Riding", "Miami", function(response) { console.log(response) });
 
 
     currentMap = apis.maps.getNewMap(-34.397, 150.644);
