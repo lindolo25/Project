@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
+    
+    <!-- My CSS -->
+    <link rel="stylesheet" href="assets/styles.css">
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+     -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+        <!-- font Awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+    <!-- jquery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- javascript -->
+    <script src="assets/app.js"></script>
+     
+
+    <title>Project</title>
+</head>
+
+
+
+
+<body>
+    <div id="singIn" class="container">
+        <div class="row">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Sign In</h5>
+                        <form class="form-signin">
+                            <div class="form-label-group">
+                                <input type="email" id="email" class="form-control" placeholder="Email address"
+                                    required autofocus>
+                                <label for="email">Email address</label>
+                            </div>
+                            <div class="form-label-group">
+                                <input type="password" id="password" class="form-control" placeholder="Password"
+                                    required>
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                <label class="custom-control-label" for="customCheck1">Remember password</label>
+                            </div>
+                            <button id="submit" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign
+                                in</button>
+
+
+                            <hr class="my-4">
+                            <div class="singUp"><small>Don't have an account:<a id="singInLink" href="#"> Sing Up Here</a></small></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="register">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                    <div class="card card-signin my-5">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Register</h5>
+                            <form class="form-signin">
+                                <div class="form-label-group">
+                                    <input type="email" id="emailRegister" class="form-control" placeholder="Email address"
+                                        required autofocus>
+                                    <label for="emailRegister">Email address</label>
+                                </div>
+                                <hr class="my-4">
+                                <div class="form-label-group">
+                                    <input type="password" id="passwordRegister" class="form-control" placeholder="Password"
+                                        required>
+                                    <label for="passwordRegister">Password</label>
+                                </div>
+                                <div class="form-label-group">
+                                    <input type="password" id="confirm" class="form-control" placeholder="Confirm Password"
+                                        required>
+                                    <label for="confirm">Confirm Password</label>
+                                </div>
+                                <button id="submitRegister" class="btn btn-lg btn-primary btn-block text-uppercase"
+                                    type="submit">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <!-- <header class="bg-dark">
+            <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+                <a class="navbar-brand" href="index.html" id="myname">My Favorite Pictures</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse flex-grow-0 ml-auto" id="navbarSupportedContent">
+                    <ul class="navbar-nav text-right">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="index.html">Search</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="main.html">My Favorites</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="logout">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header> -->
+        
+    <div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav class="navbar-dark bg-dark" id="sidebar">
+                <div class="sidebar-header">
+                    <h3>My Favorite Pictures</h3>
+                </div>
+    
+                <ul class="list-unstyled components">
+                    <p>Dummy Heading</p>
+                    <li class="active">
+                        <a href="#">Home</a>
+                        
+                    </li>
+                    <li>
+                        <a href="#">About</a>
+                        <a href="#">Pages</a>
+                        
+                    </li>
+                    <li>
+                        <a href="#">Portfolio</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+    
+                    
+                    <form>
+                            <div class="form-label-group">
+                                <input type="text" id="search" class="form-control" placeholder="Search" required autofocus>
+                                <label for="search">Search</label>
+                                <button id="searchButton" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Search</button>
+                                <a href="main.html">Main</a>
+                             
+                            </div>
+                    </form>
+                
+            </nav>
+    
+            <!-- Page Content Holder -->
+            <div id="content">
+    
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <div class="container-fluid">
+    
+                        <button type="button" id="sidebarCollapse" class="navbar-btn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fas fa-align-justify"></i>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="nav navbar-nav ml-auto">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="#">Search</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">My Favorites</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Log Out</a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                
+                <div id="photosPosition">
+            
+                </div>
+                
+            </div>
+        </div>
+    
+    
+
+
+        
+    </div>
+   
+
+
+    
+        <!-- Popper.JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        
+        
+</body>
+
+
+
+</html>
