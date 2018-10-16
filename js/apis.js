@@ -27,30 +27,62 @@ var apis =
 
         searchEvents: function(keyword, location, callback) 
         {
+            this.searchEventsLoadMore(keyword, location, 1, callback);
+        },
+
+        searchEventsLoadMore: function(keyword, location, page, callback)
+        {
+            var url = "https://www.eventbriteapi.com/v3/events/search/?q="+ keyword
+            +"&location.address="+ location
+            +"&sort_by=best"
+            +"&page="+ page
+            +"&token=" + this.everbriteKey;
+            console.log(url);
             $.ajax({
-                url: "https://www.eventbriteapi.com/v3/events/search/?q="+ keyword
-                +"&location.address="+ location
-                +"&sort_by=best"
-                +"&token=" + this.everbriteKey,
+                url: url,
                 method: "GET"
             })
-            .done(function(response) { apis.eventbrite.listeners.eventSearchListener(response, callback); })
+            .done(function(response) { apis.eventbrite.listeners.eventSearchListener(keyword, location, response, callback); })
             .fail(function() { apis.eventbrite.listeners.eventSearchFailed(callback); });
+        },
+
+        getVenue: function(venueId, callback)
+        {
+            $.ajax({
+                url: "https://www.eventbriteapi.com/v3/venues/"+ venueId +"/?token=" + this.everbriteKey,
+                method: "GET"
+            })
+            .done(function(response) { apis.eventbrite.listeners.getVenueListener(response, callback); })
+            .fail(function() { apis.eventbrite.listeners.getVenueFailed(callback); });
         },
 
         listeners:
         {
-            eventSearchListener: function(response, callback)
+            eventSearchListener: function(keyword, location, response, callback)
             {
-                console.log("eventbrite response handler.");
+                console.log("eventSearchListener");
+                console.log(response);
                 if(response.events.length === 0)
                 {
                     response = null;
                     callback(response);
                     return;
                 }
+                
+                var loadMoreTemp = null;
+                if(response.pagination.page_number !== response.pagination.page_count)
+                {
+                    loadMoreTemp = function(callback)
+                    {
+                        apis.eventbrite.searchEventsLoadMore(keyword, location, ++response.pagination.page_number, callback);
+                    }
+                }
 
-                var result = [];
+                var result = {
+                    events: [],
+                    hasMoreItems: response.pagination.has_more_items,
+                    loadMore: loadMoreTemp
+                }
 
                 for(i = 0; i < response.events.length; i++)
                 {
@@ -60,7 +92,8 @@ var apis =
                     var pos = short.indexOf(" ");
                     pos = 200 + pos;
                     short = temp.description.text.substring(0, pos);
-                    result.push({
+
+                    result.events.push({
                         id: temp.id,
                         categoryId: temp.category_id,
                         name: temp.name.text,
@@ -82,6 +115,38 @@ var apis =
             eventSearchFailed: function(callback)
             {
                 console.log("searching for events failed.");
+                var response = null;
+                callback(response);
+            },
+
+            getVenueListener: function(response, callback)
+            {
+                console.log("get venue response handler");
+                result = null;
+                if(response === null || response === undefined)
+                {
+                    callback(result);
+                    return;
+                }
+                
+                var result = {
+                    id: response.id,
+                    name: response.name,
+                    address1: response.address.address_1,
+                    address2: response.address.address_2,
+                    city: response.address.city,
+                    region: response.address.region,
+                    postalCode: response.address.postal_code,
+                    country: response.address.country,
+                    lat: response.latitude,
+                    lng: response.longitude
+                }
+                callback(result);
+            },
+
+            getVenueFailed: function(callback)
+            {
+                console.log("get venue failed.");
                 var response = null;
                 callback(response);
             }
@@ -210,15 +275,38 @@ var apis =
 $(document).ready(function()
 {
     apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
-    apis.eventbrite.searchEvents("bike Riding", "Miami", function(response) { console.log(response) });
+    apis.eventbrite.searchEvents("dining", "Miami", function(response) 
+    { 
+        temp = response.events[0].venueId;
+        apis.eventbrite.getVenue(temp, function(response) { console.log(response); });
+        response.loadMore(function(response) { console.log(response); });
+        console.log(response); 
+    });
 
 
-    currentMap = apis.maps.getNewMap(-34.397, 150.644);
+    currentMap = apis.maps.getNewMap(25.77481, -80.19773);
     $('body').append(currentMap.element);
 
     currentMap.bindAutocomplete($("#cop-test")[0]);
-    
 
 
+    // from now on a test for google places -------------------------------------------------------------------------
+
+    // Create the places service.
+    var element = $("<div>")[0];
+    var service = new google.maps.places.PlacesService(element);
+
+    // Perform a nearby search.
+    service.nearbySearch({
+            location: new google.maps.LatLng(25.77481, -80.19773), 
+            radius: 5000, 
+            type: ['restaurant']
+        },
+        function(results, status, pagination) 
+        {
+            if (status !== 'OK') return;
+            console.log("places");
+            console.log(results);
+        });
 });
 
