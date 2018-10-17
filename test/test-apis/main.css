@@ -1,0 +1,38 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+
+#header {
+    background-image: url("img/1\ _6EdJgpcWyeWne36eFH7eA@2x.jpeg");
+    background-repeat:no-repeat;
+    background-size: 100% auto;
+    background-position:center;
+}
+
+#header-top { background-color: rgba(225, 255, 255, 0.6); }
+
+#search {
+    padding-top: 55px;
+    height: 165px;
+}
+
+.map {
+    height: 300px;
+}
+
+#main {
+    margin: 20px 0px;
+}
+
+.card {
+    border: 0;
+    border-radius: initial;
+    width: auto !important;
+}
+
+.card-img-top { border-radius: initial; }
+
+.card-body { padding: 1.25rem 0;  }

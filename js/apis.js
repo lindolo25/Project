@@ -285,9 +285,10 @@ $(document).ready(function()
 
 
     currentMap = apis.maps.getNewMap(25.77481, -80.19773);
-    $('body').append(currentMap.element);
+    $('#map').append(currentMap.element);
 
     currentMap.bindAutocomplete($("#cop-test")[0]);
+
 
 
     // from now on a test for google places -------------------------------------------------------------------------
