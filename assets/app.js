@@ -22,13 +22,14 @@
     var image;
     var id;
     var divImage;
-    var fovoriteButton;
+    var favoritoButton;
     var photoURL = '';
     var query = "";
     var url = "";
     limit = "&limit=1"
     var logged = localStorage.getItem("logged");
-
+    var email = localStorage.getItem("email");
+    //var user = firebase.auth().currentUser;
 
 
     //   -------------------------------------------------------------------------------  
@@ -52,25 +53,9 @@
             mainHtml.hide();
         }
 
-        // For the side bar 
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-            $(this).toggleClass('active');
-        });
-
-        function logout() {
-            firebase.auth().signOut();
-            localStorage.setItem("logged", false);
-            localStorage.setItem("user", "");
-            user = '';
-            //firebase.auth.singOut();
-            singInForm.show();
-            registeForm.hide();
-            mainHtml.hide();
-        }
-
-
-        searchButton.on('click', function (event) {
+        
+        // Function for to find photos in the api
+        function searchFunction(event) {
             event.preventDefault();
             photosPosition.empty();
             query = $('#search').val().trim();
@@ -89,22 +74,23 @@
                     image.attr('class', 'img');
                     console.log(element);
                     divImage = $('<div class="divI">');
-                    fovoriteButton = $('<butoon class="btn btn-success imgButton">Favorito</button>');
-                    fovoriteButton.attr('value', photoURL)
-                    fovoriteButton.append($('<i class="fa fa-star"></i>'));
+                    favoritoButton = $('<button class="btn  imgButton">Add to Favorito</button>');
+                    favoritoButton.attr('value', photoURL)
+                    favoritoButton.append($('<i class="fa fa-star"></i>'));
 
-                    divImage.append(image).append(fovoriteButton)
+                    divImage.append(image).append(favoritoButton)
 
                     photosPosition.append(divImage);
 
                 });
             })
-        })
+        }
 
+    
 
-        logOut.on('click', function () {
-            logout();
-        })
+        searchButton.on('click', function(event){
+            searchFunction(event);
+        } );
 
         //Switching between the Register view and the Sing In view
         $('#singInLink').on('click', () => {
@@ -127,6 +113,21 @@
             }
         })
 
+        //Function for the Sing Up
+        function singUp(email, password) {
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+                verifyEmail();
+                email='';
+                password='';
+            }).catch(
+                (error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(error.message);
+                }
+            )
+        }
+
         //Calling the button for the Login
         $('#submit').on('click', function (event) {
             event.preventDefault();
@@ -146,23 +147,32 @@
             });
         }
 
-        //Function for the Sing Up
-        function singUp(email, password) {
-            firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
-                verifyEmail();
-            }).catch(
-                (error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log(error.message);
-                }
-            )
+        
+        logOut.on('click', function () {
+            logout();
+        })
+
+        // Funtion for the logout
+        function logout() {
+            console.log("Log out");
+            firebase.auth().signOut();
+            localStorage.setItem("logged", false);
+            localStorage.setItem("user", "");
+            user = '';
+            //firebase.auth.singOut();
+            singInForm.show();
+            registeForm.hide();
+            mainHtml.hide();
         }
+
+
+        
         
         firebase.auth().onAuthStateChanged(function (user) {
+            console.log("Email:" + email);
             if (user) {
                 localStorage.setItem("logged", true);
-                localStorage.setItem("user", user);
+                localStorage.setItem("email", email);
                 singInForm.hide();
                 registeForm.hide();
                 mainHtml.show();
@@ -171,7 +181,7 @@
                 // No user is signed in.
             }
         });
-
+        // Para verificar el Email
         function verifyEmail() {
             var user = firebase.auth().currentUser;
             user.sendEmailVerification().then(function () {
@@ -183,17 +193,22 @@
             })
         }
 
-        db.collection("users").add({
-            first: "Ada",
-            last: "Lovelace",
-            born: 1815
+        $('body').on('click','.imgButton',function(){
+            //console.log("Esta es la url de la photo" + $(this).attr('value'));
+          
+            db.collection("favoritos").add({
+                email: localStorage.getItem('email'),
+                url: $(this).attr('value')
+            })
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
         })
-        .then(function(docRef) {
-            console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function(error) {
-            console.error("Error adding document: ", error);
-        });
+
+        
 
     })
 })();
