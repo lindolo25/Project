@@ -226,6 +226,41 @@ var apis =
                 map.markers[i].setMap(value);
             }
         },
+
+        geocodeLatLng: function (lat, lng, callback) 
+        {            
+            var latlng = new google.maps.LatLng(lat, lng);
+            var geocoder = new google.maps.Geocoder;
+            geocoder.geocode({ 'location': latlng }, function(results, status) 
+            {
+                apis.maps.listeners.geocodeLatLngListener(results, status, callback);
+            });
+        },
+
+        addressFind: function(value, address)
+        {
+            var result = null;
+            var found = false;
+            for(i = 0; i < address.length; i++)
+            {
+                var types = address[i].types;
+                for(y = 0; y < types.length; y++)
+                {
+                    if(types[y] === value)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(found)
+                {
+                    result = address[i]
+                    break;
+                }
+            }
+            return result;
+        },
         
         listeners:
         {
@@ -257,6 +292,26 @@ var apis =
                 {
                     map.map.fitBounds(place.geometry.viewport);
                 }
+            },
+
+            geocodeLatLngListener(results, status, callback)
+            {
+                var result = null;
+
+                if (status === 'OK') 
+                {
+                    if (results[0]) 
+                    {
+                        var place = results[0].address_components;
+                        //console.log(place);
+                        state = apis.maps.addressFind("administrative_area_level_1", place).short_name;
+                        city = apis.maps.addressFind("locality", place).short_name;
+
+                        result = city +', '+ state;
+                    } 
+                }
+
+                callback(result);
             }
         }
     },
@@ -312,6 +367,8 @@ $(document).ready(function()
             console.log(location.coords.latitude);
             console.log(location.coords.longitude);
             console.log(location.coords.accuracy);
+
+            apis.maps.geocodeLatLng(location.coords.latitude, location.coords.longitude, function(response) { console.log(response); });
           });
 });
 
