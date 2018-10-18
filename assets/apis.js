@@ -1,5 +1,3 @@
-console.log("it all starts here.");
-
 var apis = 
 {
     resultsMax: 10,
