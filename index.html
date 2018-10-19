@@ -8,140 +8,184 @@
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-auth.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+        crossorigin="anonymous">
     
-     <!-- Bootstrap -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
-
-        <!-- My CSS -->
-    <link rel="stylesheet" href="assets/styles.css">
-        <!-- font Awesome -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-
+    
     <!-- jquery-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- javascript -->
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARvKBWbt4DSDpEAUslEkCNw4i7uBiG69I&libraries=places"></script>
+    <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
+    
+    <!-- My javascript -->
     <script src="assets/app.js"></script>
-    <title>Project</title>
+    <script src="assets/apis.js"></script>
+    <!-- My CSS -->
+    <!--<link rel="stylesheet" href="assets/styles.css">-->
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/main.css" />
+
+    <title>Project 1</title>
 </head>
 
-
-
-
 <body>
-    <div id="singIn" class="container">
-        <div class="row">
-            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div class="card card-signin my-5">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Sign In</h5>
+    <div id="main">
+        <header id="header">
+            <div>
+                <div id="header-top">
+                <div class="container text-right">
+                    <a href="index.html" class="float-left">Home</a>
+                    <a href="#">My Favorites</a>                    
+                    <span>|</span>
+                    <a id="logOut" href="#">Log Out</a>
+                </div>   
+                </div>
+                <div id="search" class="text-center">
+                <div class="container">
+                    <form id="search-form" method="GET" action="index.html">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search Activities" aria-label="First name" class="form-control">
+                            <input type="text" id="cop-test" class="form-control" placeholder="Search" text="" />
+                        </div>
+                        <input type="submit" style="visibility: hidden">
+                    </form>
+                </div>              
+                </div>
+            </div>
+        </header>
+        <div id="map"></div>
+        <div id="main2">
+            <div class="container">
+                <h3>Most Relevant</h3>
+                <div id="events" class="row">
+                    <div class="col-6 col-md-3">              
+                    <div class="card">
+                        <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                        </div>
+                    </div>            
+                    <div class="col-6 col-md-3">
+                    <div class="card">
+                        <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                        </div>
+                    </div>            
+                    <div class="col-6 col-md-3">
+                    <div class="card">
+                        <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                        </div>
+                    </div>                        
+                    <div class="col-6 col-md-3">
+                        <div class="card">
+                            <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                            <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3>Some Images from the city</h3>
+                <div class="row">
+                    <div id="citi-images" class="col-12">
+                        
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal2">
+            <div class="container">
+                <div class="modal2-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam molestias cumque ullam deserunt labore magni, at, ab rem assumenda provident neque tenetur tempore! Voluptates rerum eum cumque repellat reprehenderit. Natus?</p>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi nostrum ipsa impedit perferendis sapiente minima neque a ea, eum aut quis voluptate fuga eveniet architecto corrupti nisi illo, possimus mollitia.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer id="footer">
+            <div class="container text-center">
+                <span>Copyright</span>
+            </div>
+        </footer>
+    </div>
+    <div id="signin">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-7 col-lg-5 mx-auto">
+                        <h3 class="text-center">Sign In</h3>
                         <form class="form-signin">
-                            <div class="form-label-group">
-                                <input type="email" id="email" class="form-control" placeholder="Email address"
-                                    required autofocus>
-                                <label for="email">Email address</label>
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
                             </div>
-                            <div class="form-label-group">
-                                <input type="password" id="password" class="form-control" placeholder="Password"
-                                    required>
-                                <label for="password">Password</label>
+                            <div class="form-group">
+                                <input type="password" id="password" class="form-control" placeholder="Password" required>
                             </div>
-                            <button id="submit" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign
-                                in</button>
+                            <button id="submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
                             <hr class="my-4">
-                            <div class="singUp"><small>Don't have an account:<a id="singInLink" href="#"> Sing Up Here</a></small></div>
+                            <div class="singUp">
+                                <span>Not a Member? </span>
+                                <a id="register-link" href="#">Create an account</a>
+                            </div>
+                            <div><a href="index.html">Go back</a></div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div id="register">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-                    <div class="card card-signin my-5">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Register</h5>
-                            <form class="form-signin">
-                                <div class="form-label-group">
-                                    <input type="email" id="emailRegister" class="form-control" placeholder="Email address"
-                                        required autofocus>
-                                    <label for="emailRegister">Email address</label>
-                                </div>
-                                <hr class="my-4">
-                                <div class="form-label-group">
-                                    <input type="password" id="passwordRegister" class="form-control" placeholder="Password"
-                                        required>
-                                    <label for="passwordRegister">Password</label>
-                                </div>
-                                <div class="form-label-group">
-                                    <input type="password" id="confirm" class="form-control" placeholder="Confirm Password"
-                                        required>
-                                    <label for="confirm">Confirm Password</label>
-                                </div>
-                                <button id="submitRegister" class="btn btn-lg btn-primary btn-block text-uppercase"
-                                    type="submit">Register</button>
-                            </form>
-                        </div>
+        <div id="register">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-7 col-lg-5 mx-auto">
+                        <h3 class="card-title text-center">Sign Up</h3>
+                        <form class="form-signin">
+                            <div class="form-group">
+                                <input type="email" id="emailRegister" class="form-control" placeholder="Email address" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="passwordRegister" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="confirm" class="form-control" placeholder="Confirm Password" required>
+                            </div>
+                            <button id="submitRegister" class="btn btn-primary btn-block" type="submit">Register</button>
+                            <hr class="my-4">
+                            <div class="singUp">
+                                <span>Have an account? </span>
+                                <a id="signin-link" href="#">Sing In</a>
+                            </div>
+                            <div><a href="index.html">Go back</a></div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div id="main">
-       
-         <header class="bg-dark">
-            <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-                <a class="navbar-brand" href="index.html" id="myname">My Favorite Pictures</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse flex-grow-0 ml-auto" id="navbarSupportedContent">
-                    <ul class="navbar-nav text-right">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Search</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="main.html">My Favorites</a>
-                        </li>
-                        <li class="nav-item">
-                            <a id="logOut" class="nav-link" id="logout">Log Out</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header> 
-   
-                    
-                    <form>
-                            <div class="form-label-group">
-                                <input type="text" id="search" class="form-control" placeholder="Search" required autofocus>
-                                <label for="search">Search</label>
-                                <button id="searchButton" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Search</button>
-                                <a href="main.html">Main</a>
-                             
-                            </div>
-                    </form>
-                
-            
-                    <button class="btn btn-primary" id="myFavoritos">Favoritos</button>
-            <!-- Page Content Holder -->
-            <div id="content">
     
-                
-                
-                <div id="photosPosition">
-            
-                </div>
-                
-            </div>
-    </div>
-
-    <!-- Popper.JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 </body>
+
 </html>

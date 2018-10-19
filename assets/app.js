@@ -38,7 +38,7 @@
 
 
         var registeForm = $('#register');
-        var singInForm = $('#singIn');
+        var singInForm = $('#signin');
         var mainHtml = $('#main');
         var searchButton = $('#searchButton');
         var logOut = $('#logOut');
@@ -98,9 +98,15 @@
         } );
 
         //Switching between the Register view and the Sing In view
-        $('#singInLink').on('click', () => {
+        $('#register-link').on('click', () => {
             singInForm.hide();
             registeForm.show();
+        })
+
+        //Switching between the Register view and the Sing In view
+        $('#signin-link').on('click', () => {
+            registeForm.hide();
+            singInForm.show();
         })
 
         //Calling the button for the Register
@@ -122,7 +128,7 @@
         function singUp(email, password) {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
                 verifyEmail();
-                location.reload();
+                //location.reload();
                 email='';
                 password='';
             }).catch(
@@ -159,10 +165,10 @@
         //Function for the Login
         function login(email, password) {
            var fr = firebase.auth().signInWithEmailAndPassword(email, password).then(
-               function(){
+               function(credentials){
 
 
-               if(eVerified){
+               if(credentials.user.emailVerified){
                 localStorage.setItem("logged", true);
                 localStorage.setItem("email", email);
                 localStorage.setItem("user", user);
