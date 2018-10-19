@@ -327,7 +327,7 @@ var apis =
 
 $(document).ready(function()
 {
-    /*apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
+    apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
     apis.eventbrite.searchEvents("dining", "Miami", function(response) 
     { 
         temp = response.events[0].venueId;
@@ -361,7 +361,7 @@ $(document).ready(function()
             if (status !== 'OK') return;
             console.log("places");
             console.log(results);
-        });*/
+        });
 
         navigator.geolocation.getCurrentPosition(function(location) {
             console.log(location.coords.latitude);

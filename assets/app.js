@@ -22,14 +22,16 @@
     var image;
     var id;
     var divImage;
-    var fovoriteButton;
+    var favoritoButton;
     var photoURL = '';
     var query = "";
     var url = "";
     limit = "&limit=1"
     var logged = localStorage.getItem("logged");
-
-
+    var email = localStorage.getItem("email");
+    var user;
+    var eVerified = localStorage.getItem("eVerified");
+    
 
     //   -------------------------------------------------------------------------------  
     document.addEventListener('DOMContentLoaded', function () {
@@ -41,8 +43,11 @@
         var searchButton = $('#searchButton');
         var logOut = $('#logOut');
         var photosPosition = $('#photosPosition');
+        var searchInput = $('#search');
+        registeForm.hide();
+        mainHtml.hide();
 
-        if (logged == 'true') {
+        if ((logged == 'true' && eVerified == 'true') ) {
             singInForm.hide();
             registeForm.hide();
             mainHtml.show();
@@ -52,25 +57,9 @@
             mainHtml.hide();
         }
 
-        // For the side bar 
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
-            $(this).toggleClass('active');
-        });
-
-        function logout() {
-            firebase.auth().signOut();
-            localStorage.setItem("logged", false);
-            localStorage.setItem("user", "");
-            user = '';
-            //firebase.auth.singOut();
-            singInForm.show();
-            registeForm.hide();
-            mainHtml.hide();
-        }
-
-
-        searchButton.on('click', function (event) {
+        
+        // Function for to find photos in the api
+        function searchFunction(event) {
             event.preventDefault();
             photosPosition.empty();
             query = $('#search').val().trim();
@@ -89,22 +78,24 @@
                     image.attr('class', 'img');
                     console.log(element);
                     divImage = $('<div class="divI">');
-                    fovoriteButton = $('<butoon class="btn btn-success imgButton">Favorito</button>');
-                    fovoriteButton.attr('value', photoURL)
-                    fovoriteButton.append($('<i class="fa fa-star"></i>'));
+                    favoritoButton = $('<button class="btn  imgButton">Add to Favorito</button>');
+                    favoritoButton.attr('value', photoURL);
+                    favoritoButton.attr('id', id);
+                    favoritoButton.append($('<i class="fa fa-star"></i>'));
 
-                    divImage.append(image).append(fovoriteButton)
+                    divImage.append(image).append(favoritoButton)
 
                     photosPosition.append(divImage);
 
                 });
             })
-        })
+        }
 
+    
 
-        logOut.on('click', function () {
-            logout();
-        })
+        searchButton.on('click', function(event){
+            searchFunction(event);
+        } );
 
         //Switching between the Register view and the Sing In view
         $('#register-link').on('click', () => {
@@ -118,7 +109,7 @@
             singInForm.show();
         })
 
-        //Calling the button for the Sing Up
+        //Calling the button for the Register
         $('#submitRegister').on('click', function (event) {
             event.preventDefault();
             email = $('#emailRegister').val().trim();
@@ -133,6 +124,35 @@
             }
         })
 
+        //Function for the Register
+        function singUp(email, password) {
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+                verifyEmail();
+                //location.reload();
+                email='';
+                password='';
+            }).catch(
+                (error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(error.message);
+                }
+            )
+        }
+
+        // Para verificar el Email
+        function verifyEmail() {
+            user = firebase.auth().currentUser;
+            user.sendEmailVerification().then(function () {
+               console.log("Enviando Correo");
+               console.log(user);
+           }).catch((error) => {
+               var errorCode = error.code;
+               var errorMessage = error.message;
+               console.log(error.message);
+           })
+       }
+
         //Calling the button for the Login
         $('#submit').on('click', function (event) {
             event.preventDefault();
@@ -144,7 +164,22 @@
 
         //Function for the Login
         function login(email, password) {
-            firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+           var fr = firebase.auth().signInWithEmailAndPassword(email, password).then(
+               function(credentials){
+
+
+               if(credentials.user.emailVerified){
+                localStorage.setItem("logged", true);
+                localStorage.setItem("email", email);
+                localStorage.setItem("user", user);
+                
+                mainHtml.show();
+                singInForm.hide();
+               }
+               }
+
+            ).catch(function (error) {
+               
                 // Handle Errors here.
                 var errorCode = error.code;
                 var errorMessage = error.message;
@@ -152,54 +187,102 @@
             });
         }
 
-        //Function for the Sing Up
-        function singUp(email, password) {
-            firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
-                verifyEmail();
-            }).catch(
-                (error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log(error.message);
-                }
-            )
-        }
         
+        logOut.on('click', function () {
+            logout();
+        })
+
+        // Funtion for the logout
+        function logout() {
+            console.log("Log out");
+            firebase.auth().signOut();
+            localStorage.setItem("logged", false);
+            localStorage.setItem("user", "");
+            user = '';
+            //firebase.auth.singOut();
+            singInForm.show();
+            registeForm.hide();
+            mainHtml.hide();
+            photosPosition.empty();
+            searchInput = "";
+            email = '';
+            password = '';
+        }
+
+
+        
+        // Observador
         firebase.auth().onAuthStateChanged(function (user) {
+            console.log("Email:" + email);
             if (user) {
-                localStorage.setItem("logged", true);
-                localStorage.setItem("user", user);
-                singInForm.hide();
-                registeForm.hide();
-                mainHtml.show();
+                
+                eVerified = user.emailVerified;
+                console.log("Ver si el user esta verificado:" + eVerified);
+                localStorage.setItem('eVerified',true);
                 // User is signed in.
             } else {
                 // No user is signed in.
             }
         });
+        
 
-        function verifyEmail() {
-            var user = firebase.auth().currentUser;
-            user.sendEmailVerification().then(function () {
-                console.log("Enviando Correo");
-            }).catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(error.message);
+        // Function to add images to favorito
+        $('body').on('click','.imgButton',function(){
+            //console.log("Esta es la url de la photo" + $(this).attr('value'));
+            
+            db.collection("favoritos").add({
+               
+                email: localStorage.getItem('email'),
+                url: $(this).attr('value'),
+                 id: $(this).attr('id'),
             })
-        }
-
-        db.collection("users").add({
-            first: "Ada",
-            last: "Lovelace",
-            born: 1815
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
         })
-        .then(function(docRef) {
-            console.log("Document written with ID: ", docRef.id);
+
+        $('body').on('click','#myFavoritos',function(){
+            
+        db.collection("favoritos").where("email", "==", 'frigsamo@gmail.com').get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            });
         })
         .catch(function(error) {
-            console.error("Error adding document: ", error);
+            console.log("Error getting documents: ", error);
         });
+
+
+        // console.log("Esta es la url de la photo" + $(this).attr('value'));
+        
+        // db.collection("favoritos").get().then(function(querySnapshot) {
+        //     querySnapshot.forEach(function(doc) {
+        //         // // doc.data() is never undefined for query doc snapshots
+        //         // console.log(doc.id, " => ", doc.data());
+        //         // // id = element.id;
+        //         // // photoURL = element.urls.small;
+        //         // // image = $('<img>');
+        //         // // image.attr('src', url);
+        //         // // image.attr('class', 'img');
+        //         // // console.log(element);
+        //         // // divImage = $('<div class="divI">');
+        //         // // favoritoButton = $('<button class="btn  imgButton">Add to Favorito</button>');
+        //         // // favoritoButton.attr('value', photoURL)
+        //         // // favoritoButton.append($('<i class="fa fa-star"></i>'));
+
+        //         // // divImage.append(image).append(favoritoButton)
+
+        //         // // photosPosition.append(divImage);
+        //     });
+        // });
+    })
+
+        
 
     })
 })();

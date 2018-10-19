@@ -8,6 +8,8 @@
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase-auth.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
         crossorigin="anonymous">
     
@@ -32,102 +34,158 @@
 </head>
 
 <body>
-    <header id="header">
-        <div>
-            <div id="header-top">
-            <div class="container text-right">
-                <a href="#" class="float-left">Home</a>
-                <a href="signin.html">Sign in</a>
-            </div>   
+    <div id="main">
+        <header id="header">
+            <div>
+                <div id="header-top">
+                <div class="container text-right">
+                    <a href="index.html" class="float-left">Home</a>
+                    <a href="#">My Favorites</a>                    
+                    <span>|</span>
+                    <a id="logOut" href="#">Log Out</a>
+                </div>   
+                </div>
+                <div id="search" class="text-center">
+                <div class="container">
+                    <form id="search-form" method="GET" action="index.html">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search Activities" aria-label="First name" class="form-control">
+                            <input type="text" id="cop-test" class="form-control" placeholder="Search" text="" />
+                        </div>
+                        <input type="submit" style="visibility: hidden">
+                    </form>
+                </div>              
+                </div>
             </div>
-            <div id="search" class="text-center">
+        </header>
+        <div id="map"></div>
+        <div id="main2">
             <div class="container">
-                <form id="search-form" method="GET" action="index.html">
-                    <div class="input-group">
-                        <input type="text" placeholder="Search Activities" aria-label="First name" class="form-control">
-                        <input type="text" id="cop-test" class="form-control" placeholder="Search" text="" />
-                    </div>
-                    <input type="submit" style="visibility: hidden">
-                </form>
-            </div>              
-            </div>
-        </div>
-    </header>
-    <div id="map"></div>
-    <div id="main2">
-        <div class="container">
-            <h3>Most Relevant</h3>
-            <div id="events" class="row">
-                <div class="col-6 col-md-3">              
-                <div class="card">
-                    <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                    </div>
-                </div>            
-                <div class="col-6 col-md-3">
-                <div class="card">
-                    <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                    </div>
-                </div>            
-                <div class="col-6 col-md-3">
-                <div class="card">
-                    <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                    </div>
-                </div>                        
-                <div class="col-6 col-md-3">
+                <h3>Most Relevant</h3>
+                <div id="events" class="row">
+                    <div class="col-6 col-md-3">              
                     <div class="card">
                         <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
                         <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                        </div>
+                    </div>            
+                    <div class="col-6 col-md-3">
+                    <div class="card">
+                        <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                        </div>
+                    </div>            
+                    <div class="col-6 col-md-3">
+                    <div class="card">
+                        <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                        </div>
+                    </div>                        
+                    <div class="col-6 col-md-3">
+                        <div class="card">
+                            <img class="card-img-top" src="assets/img/index.svg" alt="Card image cap">
+                            <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <h3>Some Images from the city</h3>
-            <div class="row">
-                <div id="citi-images" class="col-12">
-                    
-    
+                <h3>Some Images from the city</h3>
+                <div class="row">
+                    <div id="citi-images" class="col-12">
+                        
+        
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-      
-    <!-- Modal -->
-    <div class="modal2">
-        <div class="container">
-            <div class="modal2-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam molestias cumque ullam deserunt labore magni, at, ab rem assumenda provident neque tenetur tempore! Voluptates rerum eum cumque repellat reprehenderit. Natus?</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi nostrum ipsa impedit perferendis sapiente minima neque a ea, eum aut quis voluptate fuga eveniet architecto corrupti nisi illo, possimus mollitia.</p>
+        
+        <!-- Modal -->
+        <div class="modal2">
+            <div class="container">
+                <div class="modal2-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam molestias cumque ullam deserunt labore magni, at, ab rem assumenda provident neque tenetur tempore! Voluptates rerum eum cumque repellat reprehenderit. Natus?</p>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Modi nostrum ipsa impedit perferendis sapiente minima neque a ea, eum aut quis voluptate fuga eveniet architecto corrupti nisi illo, possimus mollitia.</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <footer id="footer">
-        <div class="container text-center">
-            <span>Copyright</span>
+        <footer id="footer">
+            <div class="container text-center">
+                <span>Copyright</span>
+            </div>
+        </footer>
+    </div>
+    <div id="signin">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-7 col-lg-5 mx-auto">
+                        <h3 class="text-center">Sign In</h3>
+                        <form class="form-signin">
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <button id="submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
+                            <hr class="my-4">
+                            <div class="singUp">
+                                <span>Not a Member? </span>
+                                <a id="register-link" href="#">Create an account</a>
+                            </div>
+                            <div><a href="index.html">Go back</a></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer>
+        <div id="register">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-7 col-lg-5 mx-auto">
+                        <h3 class="card-title text-center">Sign Up</h3>
+                        <form class="form-signin">
+                            <div class="form-group">
+                                <input type="email" id="emailRegister" class="form-control" placeholder="Email address" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="passwordRegister" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="confirm" class="form-control" placeholder="Confirm Password" required>
+                            </div>
+                            <button id="submitRegister" class="btn btn-primary btn-block" type="submit">Register</button>
+                            <hr class="my-4">
+                            <div class="singUp">
+                                <span>Have an account? </span>
+                                <a id="signin-link" href="#">Sing In</a>
+                            </div>
+                            <div><a href="index.html">Go back</a></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
 </body>
 
 </html>
