@@ -402,7 +402,7 @@ $(document).ready(function()
                         <div class="col-12 col-md-8">\
                             <h1>'+ event.name +'</h1>\
                             <p>'+ event.desc +'</p>\
-                            <a href="'+ event.url +'">Go to event page</a>\
+                            <a href="'+ event.url +'" target="_blank">Go to event page</a>\
                         </div>\
                         <div class="col-12 col-md-4">\
                             <h3>Starts</h3>\
