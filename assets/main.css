@@ -54,12 +54,16 @@ html, body {
     top:0px; 
     left: 0px;
     overflow-y: scroll;
-    visibility: hidden;
+    display: none;
 }
 
 .modal2-body 
 {
     background-color: white;
     padding: 30px;
+}
+
+#details-container
+{
     margin: 30px 0px;
 }

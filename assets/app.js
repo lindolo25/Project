@@ -13,7 +13,7 @@
 
 
     // Initializing Global variables
-    var db = firebase.firestore();
+    //var db = firebase.firestore();
     var email = '';
     var password = '';
     var accesKey = '61dba37b9b408d3f7398562fd07931239ef3c16e7c047cba031df248d53abc9f';
@@ -244,43 +244,44 @@
             });
         })
 
-        $('body').on('click','#myFavoritos',function(){
+        $('body').on('click','#myFavoritos',function()
+        {
             
-        db.collection("favoritos").where("email", "==", 'frigsamo@gmail.com').get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+            db.collection("favoritos").where("email", "==", 'frigsamo@gmail.com').get()
+            .then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " => ", doc.data());
+                });
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
             });
+
+
+            // console.log("Esta es la url de la photo" + $(this).attr('value'));
+            
+            // db.collection("favoritos").get().then(function(querySnapshot) {
+            //     querySnapshot.forEach(function(doc) {
+            //         // // doc.data() is never undefined for query doc snapshots
+            //         // console.log(doc.id, " => ", doc.data());
+            //         // // id = element.id;
+            //         // // photoURL = element.urls.small;
+            //         // // image = $('<img>');
+            //         // // image.attr('src', url);
+            //         // // image.attr('class', 'img');
+            //         // // console.log(element);
+            //         // // divImage = $('<div class="divI">');
+            //         // // favoritoButton = $('<button class="btn  imgButton">Add to Favorito</button>');
+            //         // // favoritoButton.attr('value', photoURL)
+            //         // // favoritoButton.append($('<i class="fa fa-star"></i>'));
+
+            //         // // divImage.append(image).append(favoritoButton)
+
+            //         // // photosPosition.append(divImage);
+            //     });
+            // });
         })
-        .catch(function(error) {
-            console.log("Error getting documents: ", error);
-        });
-
-
-        // console.log("Esta es la url de la photo" + $(this).attr('value'));
-        
-        // db.collection("favoritos").get().then(function(querySnapshot) {
-        //     querySnapshot.forEach(function(doc) {
-        //         // // doc.data() is never undefined for query doc snapshots
-        //         // console.log(doc.id, " => ", doc.data());
-        //         // // id = element.id;
-        //         // // photoURL = element.urls.small;
-        //         // // image = $('<img>');
-        //         // // image.attr('src', url);
-        //         // // image.attr('class', 'img');
-        //         // // console.log(element);
-        //         // // divImage = $('<div class="divI">');
-        //         // // favoritoButton = $('<button class="btn  imgButton">Add to Favorito</button>');
-        //         // // favoritoButton.attr('value', photoURL)
-        //         // // favoritoButton.append($('<i class="fa fa-star"></i>'));
-
-        //         // // divImage.append(image).append(favoritoButton)
-
-        //         // // photosPosition.append(divImage);
-        //     });
-        // });
-    })
 
         
 
