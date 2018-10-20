@@ -35,7 +35,7 @@ var apis =
             +"&sort_by=best"
             +"&page="+ page
             +"&token=" + this.everbriteKey;
-            console.log(url);
+            //console.log(url);
             $.ajax({
                 url: url,
                 method: "GET"
@@ -58,8 +58,8 @@ var apis =
         {
             eventSearchListener: function(keyword, location, response, callback)
             {
-                console.log("eventSearchListener");
-                console.log(response);
+                //console.log("eventSearchListener");
+                //console.log(response);
                 if(response.events.length === 0)
                 {
                     response = null;
@@ -86,10 +86,14 @@ var apis =
                 {
                     temp = response.events[i];
 
-                    var short = temp.description.text.substring(200,temp.description.text.length - 1);
-                    var pos = short.indexOf(" ");
-                    pos = 200 + pos;
-                    short = temp.description.text.substring(0, pos);
+                    var short = "";
+                    if(temp.description.text)
+                    {
+                        short = temp.description.text.substring(200,temp.description.text.length - 1);
+                        var pos = short.indexOf(" ");
+                        pos = 200 + pos;
+                        short = temp.description.text.substring(0, pos);
+                    }                    
 
                     result.events.push({
                         id: temp.id,
@@ -102,8 +106,8 @@ var apis =
                         dateEnd: temp.end.utc,
                         url: temp.url,
                         venueId: temp.venue_id,
-                        imageUrl: temp.logo.url,
-                        imageId: temp.logo.id
+                        imageUrl: temp.logo ? temp.logo.url : "assets/img/index.svg",
+                        imageId: temp.logo ? temp.logo.url : null
                     });
                 }
 
@@ -112,14 +116,14 @@ var apis =
 
             eventSearchFailed: function(callback)
             {
-                console.log("searching for events failed.");
+                //console.log("searching for events failed.");
                 var response = null;
                 callback(response);
             },
 
             getVenueListener: function(response, callback)
             {
-                console.log("get venue response handler");
+                //console.log("get venue response handler");
                 result = null;
                 if(response === null || response === undefined)
                 {
@@ -144,7 +148,7 @@ var apis =
 
             getVenueFailed: function(callback)
             {
-                console.log("get venue failed.");
+                //console.log("get venue failed.");
                 var response = null;
                 callback(response);
             }
@@ -156,7 +160,7 @@ var apis =
         getNewMap: function(lat, lng)
         {
             var mapObject = $('<div class="map">');
-            console.log(mapObject);
+            //console.log(mapObject);
             map = new google.maps.Map(mapObject[0],
             {
                 center: {lat: lat, lng: lng},
@@ -267,7 +271,7 @@ var apis =
             autocompletePlaceChanged(autocomplete, map)
             {
                 var place = autocomplete.getPlace();
-                console.log(place);
+                //console.log(place);
 
                 if (!place.geometry) 
                 {
@@ -327,7 +331,136 @@ var apis =
 
 $(document).ready(function()
 {
-    apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
+
+    currentLoc = { lat: 25.76896, lng: -80.18998, region: "Miami, FL" };
+    currentEvents = null;
+    
+    navigator.geolocation.getCurrentPosition(function geoGet(location) 
+    {
+        currentLoc = location.coords.latitude;
+        currentLoc = location.coords.longitude;
+
+        apis.maps.geocodeLatLng(location.coords.latitude, location.coords.longitude, function(response) 
+        { 
+            currentLoc.region = response;
+            $("#location-input").val(response);
+            pageMap = apis.maps.getNewMap(location.coords.latitude, location.coords.longitude);
+            pageMap.bindAutocomplete($("#location-input")[0]);
+            
+        });
+    });
+    
+    $("#location-input").val(currentLoc.region);
+    pageMap = apis.maps.getNewMap(currentLoc.lat, currentLoc.lng);
+    pageMap.bindAutocomplete($("#location-input")[0]);
+
+    apis.eventbrite.searchEvents("", currentLoc.region, function(response) 
+    { 
+        currentEvents = response;
+        //console.log(response);
+        loadEventsOnScreen(0, 4, currentEvents.events);
+    });
+
+    $("#search-form").on("submit", function(event) 
+    {
+        event.preventDefault();
+
+        var keyword = $("#keyword-input").val().trim();
+        var location = $("#location-input").val().trim();
+
+        if( keyword !== "" && location !== "")
+        {
+            apis.eventbrite.searchEvents(keyword, location, function(response) 
+            { 
+                currentEvents = response;
+                //console.log(response);
+                loadEventsOnScreen(0, 10, currentEvents.events);
+            });
+        }
+    
+    });
+
+    $("#events").on("click", ".details-link", function(event) 
+    {
+        event.preventDefault();
+        if (event.target !== this) return;
+        
+        var i = $(this).attr("data-index");
+        var event = currentEvents.events[i];
+        $("#details-container").empty();
+
+        apis.eventbrite.getVenue(event.venueId, function(response) 
+        { 
+            pageMap.clearMarkers()
+            pageMap.addMarker(response.lng, response.lat, event.name, event.shortDesc);
+            $("#details-container").prepend(pageMap.element);
+
+            var address2 = (response.address2) ? response.address2 : '';
+
+            var body = $('<div class="modal2-body">\
+                    <div class="row">\
+                        <div class="col-12 col-md-8">\
+                            <h1>'+ event.name +'</h1>\
+                            <p>'+ event.desc +'</p>\
+                            <a href="'+ event.url +'">Go to event page</a>\
+                        </div>\
+                        <div class="col-12 col-md-4">\
+                            <h3>Starts</h3>\
+                            <div>\
+                                <span>'+ event.dateStart +'</span>\
+                            </div>\
+                            <h3>Location</h3>\
+                            <div>\
+                                <span class="d-block">'+ response.address1 +'</span>\
+                                <span class="d-block">'+ address2 +'</span>\
+                                <span class="d-block">'+ response.city +','+ response.region +' '+ response.postalCode +'</span>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>');
+                $("#details-container").append(body);
+            $(".modal2").show();
+            //console.log("done ...");
+        });        
+    });
+
+    $(".modal2").on("click", function(event) 
+    { 
+        if (event.target !== this) return;
+
+        //console.log("close"); 
+        $(".modal2").hide(); 
+    });
+
+});
+
+function loadEventsOnScreen(start, total, events)
+{
+    var eventsContainer = $("#events");
+    eventsContainer.empty();
+    var length =  start + total > events.length ? events.length : start + total;
+
+    for(i = start; i < length; i++)
+    {
+        var event = events[i];
+        var item = $('<div class="col-6 col-md-3">\
+                <div class="card">\
+                    <img class="card-img-top" src="'+ event.imageUrl +'" alt="Card image cap">\
+                    <div class="card-body">\
+                        <h5 class="card-title">'+ event.name +'</h5>\
+                        <p class="card-text">'+ event.shortDesc +'</p>\
+                        <a href="#" class="details-link card-link" data-index="'+ i +'">Learn more</a>\
+                        <br>\
+                        <a href="#" class="favorites-link card-link" data-index="'+ i +'">Add to Favorites</a>\
+                    </div>\
+                </div>\
+            </div>');
+        eventsContainer.append(item);
+    }
+}
+
+
+/*apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
     apis.eventbrite.searchEvents("dining", "Miami", function(response) 
     { 
         temp = response.events[0].venueId;
@@ -340,11 +473,10 @@ $(document).ready(function()
     currentMap = apis.maps.getNewMap(25.77481, -80.19773);
     $('#map').append(currentMap.element);
 
-    currentMap.bindAutocomplete($("#cop-test")[0]);
+    currentMap.bindAutocomplete($("#location-input")[0]);*/
 
 
-
-    // from now on a test for google places -------------------------------------------------------------------------
+    /*// from now on a test for google places -------------------------------------------------------------------------
 
     // Create the places service.
     var element = $("<div>")[0];
@@ -361,14 +493,5 @@ $(document).ready(function()
             if (status !== 'OK') return;
             console.log("places");
             console.log(results);
-        });
-
-        navigator.geolocation.getCurrentPosition(function(location) {
-            console.log(location.coords.latitude);
-            console.log(location.coords.longitude);
-            console.log(location.coords.accuracy);
-
-            apis.maps.geocodeLatLng(location.coords.latitude, location.coords.longitude, function(response) { console.log(response); });
-          });
-});
+        });*/
 
