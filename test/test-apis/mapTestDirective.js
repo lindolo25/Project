@@ -79,10 +79,9 @@
             }
             else { return null }
         }
-        
-        function fidnPlace(location)
-        {
-            $scope.geocoder.geocode({ 'location': location },function (results, status) {
+
+        function fidnPlace(location) {
+            $scope.geocoder.geocode({ 'location': location }, function (results, status) {
                 if (status === 'OK') {
                     if (results[0]) {
                         addMarker(location, results[0]);
@@ -100,13 +99,12 @@
             setMap(null);
             $scope.marker = new google.maps.Marker({
                 position: location,
-                draggable: true,     
+                draggable: true,
                 map: $scope.map
             });
             $scope.marker.addListener("dragend", onDragEnded);
             setInfoWindow(place.formatted_address);
-            if ($ctrl.onChange && typeof($ctrl.onChange) === "function") 
-            {
+            if ($ctrl.onChange && typeof ($ctrl.onChange) === "function") {
                 $ctrl.onChange(getLocationObject(location, place.address_components));
             }
 
@@ -115,8 +113,7 @@
             }
         }
 
-        function onDragEnded(event)
-        {
+        function onDragEnded(event) {
             fidnPlace(event.latLng);
         }
 
@@ -130,7 +127,7 @@
                 lat: loc.lat(),
                 lng: loc.lng(),
                 address1: getAddressComponent(addressComponents, [
-                    { value: "street_number", property: "long_name" }, 
+                    { value: "street_number", property: "long_name" },
                     { value: "route", property: "short_name" }]),
                 city: getAddressComponent(addressComponents, [{ value: "locality", property: "long_name" }]),
                 state: getAddressComponent(addressComponents, [{ value: "administrative_area_level_1", property: "short_name" }]),
@@ -138,8 +135,7 @@
             }
         }
 
-        function getAddressComponent(adc, values)
-        {
+        function getAddressComponent(adc, values) {
             let tmp = values.map(x => {
                 let part = adc.find(y => y.types.includes(x.value))
                 return part ? part[x.property] : "";
