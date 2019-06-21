@@ -166,6 +166,18 @@ var apis =
                 center: {lat: lat, lng: lng},
                 zoom: 8
             });
+
+            
+
+            map.addListener('click', function(event) {
+                placeMarker(event.latLng);
+             });
+             
+             function placeMarker(location) {
+                let newMarker = new google.maps.Marker({ map: map, position: location });
+                console.log(newMarker);
+                return newMarker;
+             }
             
             return { 
                 map: map, 
@@ -460,7 +472,7 @@ function loadEventsOnScreen(start, total, events)
 }
 
 
-/*apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
+apis.eventfulVenues("Restaurants", "Miami", function(response) { console.log(response); });
     apis.eventbrite.searchEvents("dining", "Miami", function(response) 
     { 
         temp = response.events[0].venueId;
@@ -473,7 +485,7 @@ function loadEventsOnScreen(start, total, events)
     currentMap = apis.maps.getNewMap(25.77481, -80.19773);
     $('#map').append(currentMap.element);
 
-    currentMap.bindAutocomplete($("#location-input")[0]);*/
+    currentMap.bindAutocomplete($("#location-input")[0]);
 
 
     /*// from now on a test for google places -------------------------------------------------------------------------
@@ -493,5 +505,5 @@ function loadEventsOnScreen(start, total, events)
             if (status !== 'OK') return;
             console.log("places");
             console.log(results);
-        });*/
-
+        });
+*/

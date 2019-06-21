@@ -1,102 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>test-apis</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARvKBWbt4DSDpEAUslEkCNw4i7uBiG69I&libraries=places"></script>
-    <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
-    <link rel="stylesheet" type="text/css" media="screen" href="../../assets/main.css" />
-</head>
-<body>
-  <header id="header">
-    <div>
-        <div id="header-top">
-          <div class="container text-right">
-              <a href="#" class="float-left">Home</a>
-              <a href="../../signin.html">Sign in</a>
-          </div>   
-        </div>
-        <div id="search" class="text-center">
-          <div class="container">
-            <form id="search-form" method="GET" action="index.html">
-                <div class="input-group">
-                    <input type="text" placeholder="Search Activities" aria-label="First name" class="form-control">
-                    <input type="text" id="cop-test" class="form-control" placeholder="Search" text="" />
-                  </div>
-                  <input type="submit" style="visibility: hidden">
-            </form>
-          </div>              
-        </div>
-    </div>
-  </header>
-  <div id="map"></div>
-  <div id="main">
-      <div class="container">
-          <h3>Must relevant</h3>
-          <div id="events" class="row">
-            <div class="col-6 col-md-3">              
-              <div class="card">
-                  <img class="card-img-top" src="../../assets/img/index.svg" alt="Card image cap">
-                  <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                  </div>
-                </div>
-            </div>            
-            <div class="col-6 col-md-3">
-              <div class="card">
-                  <img class="card-img-top" src="../../assets/img/index.svg" alt="Card image cap">
-                  <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                  </div>
-                </div>
-            </div>            
-            <div class="col-6 col-md-3">
-              <div class="card">
-                  <img class="card-img-top" src="../../assets/img/index.svg" alt="Card image cap">
-                  <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                  </div>
-                </div>
-            </div>                        
-            <div class="col-6 col-md-3">
-                <div class="card">
-                    <img class="card-img-top" src="../../assets/img/index.svg" alt="Card image cap">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      <a href="#" class="card-link">Card link</a>
-                      <a href="#" class="card-link">Another link</a>
-                    </div>
-                  </div>
-              </div>
-          </div>
-          <h3>Some Images from the city</h3>
-          <div class="row">
-              <div id="citi-images" class="col-12">
-                
 
-              </div>
-          </div>
-      </div>
-  </div>
-  <footer id="footer">
-    <div class="container text-center">
-        <span>Copyright</span>
-    </div>
-  </footer>
-  <script src="../../assets/apis.js"></script>
+<head>
+	<title>Removing Markers</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="index.css">
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBN0QqBtBgU2D2X_07U_fphqZXZDLpvyk&libraries=places"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="mapTest.controller.js"></script>
+	<script src="mapTestDirective.js"></script>
+</head>
+
+<body ng-app="mapTestApp">
+	<div class="container-fluid" ng-controller="mapTestController" ng-cloak>
+		<div class="row">
+			<div class="col-6">
+				<h1>{{appName}}</h1>
+				<form>
+					<div class="form-group">
+						<label for="inputAddress">Address</label>
+						<input type="text" class="form-control" id="inputAddress" ng-model="location.address1" placeholder="1234 Main St">
+					</div>
+					<div class="form-group">
+						<label for="inputAddress2">Address 2</label>
+						<input type="text" class="form-control" id="inputAddress2"
+							placeholder="Apartment, studio, or floor">
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputCity">City</label>
+							<input type="text" class="form-control" id="inputCity" ng-model="location.city">
+						</div>
+						<div class="form-group col-md-4">
+							<label for="inputState">State</label>
+							<input type="text" class="form-control" id="inputState" ng-model="location.state">
+						</div>
+						<div class="form-group col-md-2">
+							<label for="inputZip">Zip</label>
+							<input type="text" class="form-control" id="inputZip" ng-model="location.zipCode">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="lat">Latitude</label>
+							<input type="number" class="form-control" id="lat" ng-disable="{{true}}" ng-model="location.lat" placeholder="37.7829541689092">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="lng">Longitude</label>
+							<input type="number" class="form-control" id="lng" ng-disable="{{true}}" ng-model="location.lng" placeholder="-122.42737474060061">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-6">
+				<ng-map title="map title" ng-model="location" on-change="onMapChange" autocomplete="#inputAddress"></ng-map>
+			</div>
+		</div>
+	</div>
 </body>
+
 </html>
